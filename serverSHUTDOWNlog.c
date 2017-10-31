@@ -7,10 +7,10 @@
 void main_reason(char* log, int main_number); 	//write main activity (ex, shutdown, restart)
 void write_comment(char* log, char* comment, char* user_comment); 	//write the reason why shutdown the computer
 void write_time_info();		//write time info
-void write_log_info();
+void write_log_info();		//write all log to file
 
 char LOGFILENAME[20] = "server_control_log";
-char system_chmod[20] = "chmod 600 ";
+char system_chmod[20] = "chmod 644 ";
 char system_chown[20] = "chown root.root ";
 
 int main()
@@ -37,8 +37,6 @@ int main()
 
 	write_log_info(log);
 	strcat(system_chmod,LOGFILENAME);
-//	strcat(system_chown,LOGFILENAME);
-//	system(system_chown);
 	system(system_chmod);
 
 	strcat(system_chown,LOGFILENAME);
