@@ -5,13 +5,13 @@
 #include <stdlib.h>
 
 void main_reason(char* log, int main_number); 	//write main activity (ex, shutdown, restart)
-void write_comment(char* log, char* comment, char* user_comment); 	//write the reason why shutdown the computer
+//void write_comment(char* log, char* comment, char* user_comment); 	//write the reason why shutdown the computer
 void write_time_info();		//write time info
 void write_log_info();		//write all log to file
 
 char LOGFILENAME[20] = "server_control_log";
-char system_chmod[20] = "chmod 644 ";
-char system_chown[20] = "chown root.root ";
+//char system_chmod[20] = "chmod 644 ";
+//char system_chown[20] = "chown root.root ";
 
 int main()
 {
@@ -19,6 +19,8 @@ int main()
 	char log[100] = {0};
 	char user_comment[100] = {0};
 	char comment[10] = "comment:[";
+	char system_chmod[20] = "chmod 644 ";	
+	char system_chown[20] = "chown root.root ";
 
 	write_time_info(log);
 
@@ -32,8 +34,10 @@ int main()
 	printf("Write Comment : ");
 	__fpurge(stdin);
 	scanf("%[^\n]s", user_comment);
-	
-	write_comment(log, comment, user_comment);
+
+	strcat(log,comment);
+	strcat(log,user_comment);
+	strcat(log,"]");
 
 	write_log_info(log);
 	strcat(system_chmod,LOGFILENAME);
@@ -83,14 +87,15 @@ void main_reason(char* log, int main_number)
 		exit(0);
 	}
 }
-
-void write_comment(char* log, char* comment, char* user_comment)
+/*
+char* write_comment(char* log, char* comment, char* user_comment)
 {
+	char for_write[100] = {0};
 	strcat(log,comment);
 	strcat(log,user_comment);
 	strcat(log,"]");
 }
-
+*/
 void write_log_info(char* log)
 {
 	FILE* f;
