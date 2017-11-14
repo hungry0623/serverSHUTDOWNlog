@@ -3,11 +3,13 @@
 #include <stdio_ext.h>
 #include <time.h>
 #include <stdlib.h>
+#include <unistd.h>
 
-void main_reason(char* log, int main_number); 	//write main activity (ex, shutdown, restart)
+void main_reason(char* log, char* main_number); 	//write main activity (ex, shutdown, restart)
 //void write_comment(char* log, char* comment, char* user_comment); 	//write the reason why shutdown the computer
 void write_time_info();		//write time info
 void write_log_info();		//write all log to file
+void crypt_shutdown();
 
 char LOGFILENAME[20] = "server_control_log";
 //char system_chmod[20] = "chmod 644 ";
@@ -15,9 +17,9 @@ char LOGFILENAME[20] = "server_control_log";
 
 int main()
 {
-	int main_number = 0;
+	char main_number[10] ={0};
 	char log[100] = {0};
-	char user_comment[100] = {0};
+	char user_comment[150] = {0};
 	char comment[10] = "comment:[";
 	char system_chmod[20] = "chmod 644 ";	
 	char system_chown[20] = "chown root.root ";
@@ -27,13 +29,13 @@ int main()
 	printf("Select the main activity pls\n");
 	printf("1. Server SHUTDOWN\n");
 	printf("2. Server RESTART\n");
-	scanf("%d",&main_number);
-
-	main_reason(log, main_number);
+//	gets(main_number);
+//	printf("%s\n",main_number);
+//	main_reason(log, main_number);
 
 	printf("Write Comment : ");
-	__fpurge(stdin);
-	scanf("%[^\n]s", user_comment);
+//	__fpurge(stdin);
+	gets(user_comment);
 
 	strcat(log,comment);
 	strcat(log,user_comment);
@@ -45,6 +47,8 @@ int main()
 
 	strcat(system_chown,LOGFILENAME);
 	system(system_chown);
+
+	crypt_shutdown();
 
 	return 0;
 }
@@ -65,17 +69,17 @@ void write_time_info()
 	fclose(f);
 }
 
-void main_reason(char* log, int main_number)
+void main_reason(char* log, char* main_number)
 {
 	char shutdown[] = "SHUTDOWN ";
 	char restart[] = "RESTART  ";
 	FILE* f;	
 
-	if(main_number == 1)
+	if(!strcmp(main_number,"1"))
 	{
 		strcat(log,shutdown);
 	}
-	else if(main_number == 2)
+	else if(!strcmp(main_number,"2"))
 	{
 		strcat(log,restart);
 	}
@@ -102,4 +106,23 @@ void write_log_info(char* log)
 	f = fopen(LOGFILENAME,"a");
 	fprintf(f, "%s\n", log);
 	fclose(f);
+}
+
+void crypt_shutdown()
+{
+	char key[50] = {0};
+	char salt[25] = "$6$3.2sh3Fj$";
+	char answer_key[1000] = "$6$3.2sh3Fj$s2UZVqJckAxgdVVpXHcV1fPJPj0tX7Ik.p0c/gLU2M/gBmAGRrpaTperS8xg.5iAoKn1zaADG4CjEH/W9Qd6k/";
+	char* check_key;
+
+	printf("Enter root password : ");
+	scanf("%s",key);
+
+	check_key = crypt(key,salt);
+	printf("%s\n", check_key);
+
+	if(strcmp(answer_key, check_key))
+	{
+		printf("hi\n");
+	}
 }
