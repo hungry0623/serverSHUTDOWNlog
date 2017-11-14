@@ -26,16 +26,16 @@ int main()
 
 	write_time_info(log);
 
-	printf("Select the main activity pls\n");
-	printf("1. Server SHUTDOWN\n");
-	printf("2. Server RESTART\n");
+//	printf("Select the main activity pls\n");
+//	printf("1. Server SHUTDOWN\n");
+//	printf("2. Server RESTART\n");
 //	gets(main_number);
 //	printf("%s\n",main_number);
 //	main_reason(log, main_number);
 
-	printf("Write Comment : ");
+	printf("Write the reason why SHUTDOWN the Server.\nComment : ");
 //	__fpurge(stdin);
-	gets(user_comment);
+	scanf("%s",user_comment);
 
 	strcat(log,comment);
 	strcat(log,user_comment);
@@ -112,17 +112,22 @@ void crypt_shutdown()
 {
 	char key[50] = {0};
 	char salt[25] = "$6$3.2sh3Fj$";
-	char answer_key[1000] = "$6$3.2sh3Fj$s2UZVqJckAxgdVVpXHcV1fPJPj0tX7Ik.p0c/gLU2M/gBmAGRrpaTperS8xg.5iAoKn1zaADG4CjEH/W9Qd6k/";
+	char answer_key[1000] = "$6$3.2sh3Fj$s2UZVqJckAxgdVVpXHcV1fPJPj0tX7Ik.p0c/gLU2M/gBmAGRrpaTperS8xg.5iAoKn1zaADG4CjEH/W9Qd6k/\0";
 	char* check_key;
 
 	printf("Enter root password : ");
 	scanf("%s",key);
 
 	check_key = crypt(key,salt);
-	printf("%s\n", check_key);
+//	printf("%s\n", check_key);
 
-	if(strcmp(answer_key, check_key))
+	if(!strcmp(answer_key, check_key))
 	{
-		printf("hi\n");
+		printf("Shutdown computer now.....\n");
+		system("init 0");
+	}
+	else
+	{
+		printf("Invaild password\n");
 	}
 }
