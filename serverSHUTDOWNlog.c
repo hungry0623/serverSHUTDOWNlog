@@ -5,13 +5,13 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-void main_reason(char* log, char* main_number); 	//write main activity (ex, shutdown, restart)
+//void main_reason(char* log, char* main_number); 	//write main activity (ex, shutdown, restart)
 //void write_comment(char* log, char* comment, char* user_comment); 	//write the reason why shutdown the computer
-void write_time_info();		//write time info
-void write_log_info();		//write all log to file
+void write_time_info(char* LOGFILENAME);		//write time info
+void write_log_info(char* log, char* LOGFILENAME);		//write all log to file
 void crypt_shutdown();
 
-char LOGFILENAME[20] = "server_control_log";
+//char LOGFILENAME[20] = {0};
 //char system_chmod[20] = "chmod 644 ";
 //char system_chown[20] = "chown root.root ";
 
@@ -20,11 +20,14 @@ int main()
 	char main_number[10] ={0};
 	char log[100] = {0};
 	char user_comment[150] = {0};
-	char comment[10] = "comment:[";
-	char system_chmod[20] = "chmod 644 ";	
-	char system_chown[20] = "chown root.root ";
+	char comment[50] = "SERVER SHUTDOWN comment:[";
+	char system_chmod[50] = "chmod 644 ";	
+	char system_chown[50] = "chown root.root ";
+	char LOGFILENAME[50] = "./server_control_log";
+//	strcpy(LOGFILENAME,"server_control_log");
+//	LOGFILENAME[20] = "server_control_log";
 
-	write_time_info(log);
+	write_time_info(LOGFILENAME);
 
 //	printf("Select the main activity pls\n");
 //	printf("1. Server SHUTDOWN\n");
@@ -41,11 +44,14 @@ int main()
 	strcat(log,user_comment);
 	strcat(log,"]");
 
-	write_log_info(log);
+	write_log_info(log,LOGFILENAME);
 	strcat(system_chmod,LOGFILENAME);
+//	printf("\ntest\n%s\n",system_chmod);
+
 	system(system_chmod);
 
 	strcat(system_chown,LOGFILENAME);
+//	printf("\ntest\n%s\n",system_chown);
 	system(system_chown);
 
 	crypt_shutdown();
@@ -53,7 +59,7 @@ int main()
 	return 0;
 }
 
-void write_time_info()
+void write_time_info(char* LOGFILENAME)
 {
 	FILE* f;
 	time_t timer;
@@ -68,7 +74,7 @@ void write_time_info()
 
 	fclose(f);
 }
-
+/*
 void main_reason(char* log, char* main_number)
 {
 	char shutdown[] = "SHUTDOWN ";
@@ -91,7 +97,7 @@ void main_reason(char* log, char* main_number)
 		exit(0);
 	}
 }
-/*
+
 char* write_comment(char* log, char* comment, char* user_comment)
 {
 	char for_write[100] = {0};
@@ -100,7 +106,7 @@ char* write_comment(char* log, char* comment, char* user_comment)
 	strcat(log,"]");
 }
 */
-void write_log_info(char* log)
+void write_log_info(char* log, char* LOGFILENAME)
 {
 	FILE* f;
 	f = fopen(LOGFILENAME,"a");
